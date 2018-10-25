@@ -17,8 +17,10 @@ public class AlienBehaviour : MonoBehaviour
 
     private void Update()
     {
-        
-
+        Match(Vector3.right);
+        Match(Vector3.left);
+        Match(Vector3.up);
+        Match(Vector3.down);
 
         /*Debug.DrawRay(transform.position, Vector3.right, Color.green,1);
         Debug.DrawRay(transform.position, Vector3.left, Color.blue, 1);
@@ -67,9 +69,37 @@ public class AlienBehaviour : MonoBehaviour
         Destroy(obj);
         yield return new WaitForSecondsRealtime(1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }*/
-    private void Match (Vector2 dir)
+    }
+    private List<GameObject> FindMatch(Vector2 castDir) { // 1
+    List<GameObject> matchingTiles = new List<GameObject>(); // 2
+    RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir); // 3
+    while (hit.collider != null && hit.collider.GetComponent<SpriteRenderer>().sprite == render.sprite) { // 4
+        matchingTiles.Add(hit.collider.gameObject);
+        hit = Physics2D.Raycast(hit.collider.transform.position, castDir);
+    }
+    return matchingTiles; // 5
+}
+
+         */
+    private void Match (Vector3 dir)
     {
-        
+        List<GameObject> matchingAliens = new List<GameObject>();
+        matchingAliens.Add(gameObject);
+        RaycastHit hit;
+        Physics.Raycast(transform.position, dir, out hit, 1);
+        Debug.DrawRay(transform.position, dir, Color.blue, 1);
+        while (hit.collider != null && hit.collider.tag == "Stack")
+        {
+            matchingAliens.Add(hit.collider.gameObject);
+            Physics.Raycast(hit.collider.transform.position, dir, out hit,1);
+            Debug.DrawRay(transform.position, dir, Color.blue, 1);
+        }
+        if (matchingAliens.Count >= 3)
+        {
+            foreach (GameObject alien in matchingAliens)
+            {
+                Destroy(alien);
+            }
+        }
     }
 }
