@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class AlienBehaviour : MonoBehaviour
 {
     public Transform playerTrans;
+    private Renderer alienRend;
     public bool stacked;
     public bool rightFree;
     public bool leftFree;
@@ -13,14 +14,15 @@ public class AlienBehaviour : MonoBehaviour
     private void Start()
     {
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        alienRend = gameObject.GetComponent<Renderer>();
     }
 
     private void Update()
     {
         Match(Vector3.right);
         Match(Vector3.left);
-        Match(Vector3.up);
-        Match(Vector3.down);
+        Match(Vector3.forward);
+        Match(Vector3.back);
 
         /*Debug.DrawRay(transform.position, Vector3.right, Color.green,1);
         Debug.DrawRay(transform.position, Vector3.left, Color.blue, 1);
@@ -88,7 +90,7 @@ public class AlienBehaviour : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(transform.position, dir, out hit, 1);
         Debug.DrawRay(transform.position, dir, Color.blue, 1);
-        while (hit.collider != null && hit.collider.tag == "Stack")
+        while (hit.collider != null && hit.collider.GetComponent<Renderer>().material.color == alienRend.material.color)
         {
             matchingAliens.Add(hit.collider.gameObject);
             Physics.Raycast(hit.collider.transform.position, dir, out hit,1);
@@ -96,6 +98,8 @@ public class AlienBehaviour : MonoBehaviour
         }
         if (matchingAliens.Count >= 3)
         {
+            Debug.Log(alienRend.material.color);
+            Debug.Log(matchingAliens.Count);
             foreach (GameObject alien in matchingAliens)
             {
                 Destroy(alien);
