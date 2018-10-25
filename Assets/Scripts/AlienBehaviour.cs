@@ -10,6 +10,7 @@ public class AlienBehaviour : MonoBehaviour
     public bool stacked;
     public bool rightFree;
     public bool leftFree;
+    public bool counted;
 
     private void Start()
     {
@@ -92,11 +93,15 @@ public class AlienBehaviour : MonoBehaviour
         Debug.DrawRay(transform.position, dir, Color.blue, 1);
         while (hit.collider != null && hit.collider.GetComponent<Renderer>().material.color == alienRend.material.color)
         {
-            matchingAliens.Add(hit.collider.gameObject);
-            Physics.Raycast(hit.collider.transform.position, dir, out hit,1);
+            if (counted == false)
+            {
+                matchingAliens.Add(hit.collider.gameObject);
+                counted = true;
+            }
+            Physics.Raycast(hit.collider.transform.position,dir, out hit, 1);
             Debug.DrawRay(transform.position, dir, Color.blue, 1);
         }
-        if (matchingAliens.Count >= 3)
+        if (matchingAliens.Count >= 5)
         {
             Debug.Log(alienRend.material.color);
             Debug.Log(matchingAliens.Count);
