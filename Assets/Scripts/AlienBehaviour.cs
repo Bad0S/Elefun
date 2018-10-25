@@ -68,17 +68,8 @@ public class AlienBehaviour : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }*/
-
-    private List<GameObject> FindMatch(Vector2 castDir)
+    private void Match (Vector2 dir)
     {
-        List<GameObject> matchingAliens = new List<GameObject>();
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
-        while (hit.collider != null && hit.collider.gameObject.tag == "Stack")
-        {
-            matchingAliens.Add(hit.collider.gameObject);
-            hit = Physics2D.Raycast(hit.collider.transform.position, castDir);
-        }
-        return matchingAliens;
+        
     }
-
 }

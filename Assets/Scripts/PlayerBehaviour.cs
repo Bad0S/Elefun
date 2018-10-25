@@ -14,11 +14,11 @@ public class PlayerBehaviour : MonoBehaviour
 	
 	void Update ()
     {
-		if (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > -6.9f)
+		if (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > -4.2f)
         {
             transform.position += Vector3.left * moveSpeed;
         }
-        if (Input.GetKey(KeyCode.RightArrow) && transform.position.x < 6.9f)
+        if (Input.GetKey(KeyCode.RightArrow) && transform.position.x < 4.2f)
         {
             transform.position += Vector3.right * moveSpeed;
         }
