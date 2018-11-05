@@ -7,105 +7,60 @@ public class AlienBehaviour : MonoBehaviour
 {
     public Transform playerTrans;
     private Renderer alienRend;
-    public bool stacked;
-    public bool rightFree;
-    public bool leftFree;
-    public bool counted;
+    private Rigidbody alienRb;
+    private bool counted;
+    List<GameObject> MatchingAliens = new List<GameObject>();
 
     private void Start()
     {
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         alienRend = gameObject.GetComponent<Renderer>();
+        alienRb = gameObject.GetComponent<Rigidbody>();
+        int a = Random.Range(0, 3);
+        switch(a)
+        {
+            case 0: alienRend.material.color = Color.red; break;
+            case 1: alienRend.material.color = Color.green; break;
+            case 2: alienRend.material.color = Color.blue; break;
+        }
     }
-
-    private void Update()
-    {
-        Match(Vector3.right);
-        Match(Vector3.left);
-        Match(Vector3.forward);
-        Match(Vector3.back);
-
-        /*Debug.DrawRay(transform.position, Vector3.right, Color.green,1);
-        Debug.DrawRay(transform.position, Vector3.left, Color.blue, 1);
-        if (Physics.Raycast(transform.position, Vector3.right, 1f))
-        {
-            rightFree = false;
-        }
-        else
-        {
-            rightFree = true;
-        }
-        if (Physics.Raycast(transform.position, Vector3.left, 1f))
-        {
-            leftFree = false;
-        }
-        else
-        {
-            leftFree = true;
-        }
-        if (stacked)
-        {
-            if (transform.position.x + 1 < playerTrans.position.x && rightFree)
-            {
-                transform.position += Vector3.right;
-            }
-            if (transform.position.x - 1 > playerTrans.position.x && leftFree)
-            {
-                transform.position += Vector3.left;
-            }
-        }*/
-    }
-    /*
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.collider.tag == "Stack")
         {
-            StartCoroutine(EndGame(collision.gameObject));
+            //alienRb.isKinematic = true;
+            Match(gameObject);
         }
-        if (collision.gameObject.tag == "Stack")
+        if (collision.collider.tag == "Player")
         {
-            stacked = true;
+            StartCoroutine(Death());
         }
     }
-    private IEnumerator EndGame(GameObject obj)
+
+    IEnumerator Death()
     {
-        Destroy(obj);
-        yield return new WaitForSecondsRealtime(1);
+        playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
+        yield return new WaitForSecondsRealtime(1.5f);
+        playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    private List<GameObject> FindMatch(Vector2 castDir) { // 1
-    List<GameObject> matchingTiles = new List<GameObject>(); // 2
-    RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir); // 3
-    while (hit.collider != null && hit.collider.GetComponent<SpriteRenderer>().sprite == render.sprite) { // 4
-        matchingTiles.Add(hit.collider.gameObject);
-        hit = Physics2D.Raycast(hit.collider.transform.position, castDir);
-    }
-    return matchingTiles; // 5
-}
 
-         */
-    private void Match (Vector3 dir)
+    private void Match(GameObject startRay)
     {
-        List<GameObject> matchingAliens = new List<GameObject>();
-        matchingAliens.Add(gameObject);
+        MatchingAliens.Add(startRay);
+        counted = true;
         RaycastHit hit;
-        Physics.Raycast(transform.position, dir, out hit, 1);
-        Debug.DrawRay(transform.position, dir, Color.blue, 1);
-        while (hit.collider != null && hit.collider.GetComponent<Renderer>().material.color == alienRend.material.color)
+        Physics.Raycast(startRay.transform.position, Vector3.up, out hit, 1);
+        Debug.DrawRay(startRay.transform.position, Vector3.up, Color.magenta, 1);
+        if (hit.collider != null && hit.collider.gameObject.GetComponent<AlienBehaviour>().counted == false && hit.collider.gameObject.GetComponent<Renderer>().material.color == alienRend.material.color)
         {
-            if (counted == false)
-            {
-                matchingAliens.Add(hit.collider.gameObject);
-                counted = true;
-            }
-            Physics.Raycast(hit.collider.transform.position,dir, out hit, 1);
-            Debug.DrawRay(transform.position, dir, Color.blue, 1);
+            Match(hit.collider.gameObject);
         }
-        if (matchingAliens.Count >= 5)
+        if (MatchingAliens.Count >= 2)
         {
+            Debug.Log(MatchingAliens.Count);
             Debug.Log(alienRend.material.color);
-            Debug.Log(matchingAliens.Count);
-            foreach (GameObject alien in matchingAliens)
+            foreach (GameObject alien in MatchingAliens)
             {
                 Destroy(alien);
             }

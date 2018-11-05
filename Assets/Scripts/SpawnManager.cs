@@ -20,7 +20,7 @@ public class SpawnManager : MonoBehaviour
         {
             posX = Random.Range(-5f, 5.9f);
             posX = Mathf.FloorToInt(posX);
-            Instantiate(alien, new Vector3(posX,15 , 10), Quaternion.identity );
+            Instantiate(alien, new Vector3(posX,21 , 0), Quaternion.identity );
             timer = 0;
         }
 	}
