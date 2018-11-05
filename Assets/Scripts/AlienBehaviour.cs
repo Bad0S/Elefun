@@ -6,70 +6,85 @@ using UnityEngine.SceneManagement;
 public class AlienBehaviour : MonoBehaviour
 {
     public Transform playerTrans;
-    public bool stacked;
-    public bool rightFree;
-    public bool leftFree;
+    private Renderer alienRend;
+    private Rigidbody alienRb;
+    public bool counted;
 
     private void Start()
     {
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        alienRend = gameObject.GetComponent<Renderer>();
+        alienRb = gameObject.GetComponent<Rigidbody>();
+        int a = Random.Range(0, 3);
+        switch(a)
+        {
+            case 0: alienRend.material.color = Color.red; break;
+            case 1: alienRend.material.color = Color.green; break;
+            case 2: alienRend.material.color = Color.blue; break;
+        }
     }
-
-    private void Update()
-    {
-        
-
-
-        /*Debug.DrawRay(transform.position, Vector3.right, Color.green,1);
-        Debug.DrawRay(transform.position, Vector3.left, Color.blue, 1);
-        if (Physics.Raycast(transform.position, Vector3.right, 1f))
-        {
-            rightFree = false;
-        }
-        else
-        {
-            rightFree = true;
-        }
-        if (Physics.Raycast(transform.position, Vector3.left, 1f))
-        {
-            leftFree = false;
-        }
-        else
-        {
-            leftFree = true;
-        }
-        if (stacked)
-        {
-            if (transform.position.x + 1 < playerTrans.position.x && rightFree)
-            {
-                transform.position += Vector3.right;
-            }
-            if (transform.position.x - 1 > playerTrans.position.x && leftFree)
-            {
-                transform.position += Vector3.left;
-            }
-        }*/
-    }
-    /*
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.collider.tag == "Stack")
         {
-            StartCoroutine(EndGame(collision.gameObject));
+            AddList(FourCast(gameObject));
         }
-        if (collision.gameObject.tag == "Stack")
+        if (collision.collider.tag == "Player")
         {
-            stacked = true;
+            StartCoroutine(Death());
         }
     }
-    private IEnumerator EndGame(GameObject obj)
+
+    IEnumerator Death()
     {
-        Destroy(obj);
-        yield return new WaitForSecondsRealtime(1);
+        playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
+        yield return new WaitForSecondsRealtime(1.5f);
+        playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }*/
-    private void Match (Vector2 dir)
+    }
+
+    private List<GameObject> FourCast(GameObject FourCastCenter)
     {
-        
+        List<GameObject> FourCastList = new List<GameObject>();
+        RaycastHit hit;
+        Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1);
+        Debug.DrawRay(gameObject.transform.position, Vector3.up, Color.magenta, 5);
+        if (hit.collider != null)
+        { FourCastList.Add(hit.collider.gameObject); }
+        Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, 1);
+        Debug.DrawRay(gameObject.transform.position, Vector3.down, Color.magenta, 5);
+        if (hit.collider != null)
+        { FourCastList.Add(hit.collider.gameObject); }
+        Physics.Raycast(gameObject.transform.position, Vector3.left, out hit, 1);
+        Debug.DrawRay(gameObject.transform.position, Vector3.left, Color.magenta, 5);
+        if (hit.collider != null)
+        { FourCastList.Add(hit.collider.gameObject); }
+        Physics.Raycast(gameObject.transform.position, Vector3.right, out hit, 1);
+        Debug.DrawRay(gameObject.transform.position, Vector3.right, Color.magenta, 5);
+        if (hit.collider != null)
+        { FourCastList.Add(hit.collider.gameObject); }
+        return FourCastList;
+    }
+
+    private void AddList(List<GameObject> FourCastList)
+    {
+        List<GameObject> MatchingAliens = new List<GameObject>();
+        MatchingAliens.Add(gameObject);
+        foreach (GameObject alien in FourCastList)
+        {
+            if (alien.GetComponent<Renderer>().material.color == gameObject.GetComponent<Renderer>().material.color)
+            {
+                MatchingAliens.Add(alien);
+                FourCast(alien);
+            }
+        }
+        if(MatchingAliens.Count >= 3)
+        {
+            Debug.Log(MatchingAliens.Count);
+            foreach (GameObject alien in MatchingAliens)
+            {
+                Destroy(alien);
+            }
+        }
     }
 }
