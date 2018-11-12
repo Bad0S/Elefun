@@ -12,27 +12,46 @@ public class AlienBehaviour : MonoBehaviour
     public bool stacked;
     public bool leftFree;
     public bool rightFree;
+    public Material redMat;
+    public Material greenMat;
+    public Material blueMat;
+    public bool destroyed;
+    private ScoreManager scoreManager;
 
     private void Start()
     {
+        scoreManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<ScoreManager>();
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         alienRend = gameObject.GetComponent<Renderer>();
         alienRb = gameObject.GetComponent<Rigidbody>();
         int a = Random.Range(0, 3);
         switch(a)
         {
-            case 0: alienRend.material.color = Color.red; break;
-            case 1: alienRend.material.color = Color.green; break;
-            case 2: alienRend.material.color = Color.blue; break;
+            case 0: alienRend.material = redMat; break;
+            case 1: alienRend.material = greenMat; break;
+            case 2: alienRend.material = blueMat; break;
         }
     }
+
+    List<GameObject> MatchingAliens;
 
     private void Update()
     {
         DetectFree();
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && !destroyed)
         {
+            MatchingAliens = new List<GameObject>();
+            MatchingAliens.Add(gameObject);
             AddList(FourCast(gameObject));
+            DestroyAliens();
+        }
+        if (Input.GetKeyDown(KeyCode.Q) && stacked )
+        {
+            MoveLeft();
+        }
+        if (Input.GetKeyDown(KeyCode.D) && stacked)
+        {
+            MoveRight();
         }
     }
 
@@ -60,43 +79,58 @@ public class AlienBehaviour : MonoBehaviour
     {
         List<GameObject> FourCastList = new List<GameObject>();
         RaycastHit hit;
-        Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1);
-        Debug.DrawRay(gameObject.transform.position, Vector3.up, Color.magenta, 5);
+
+        Physics.Raycast(FourCastCenter.transform.position, Vector3.up, out hit, 1);
+        Debug.DrawRay(FourCastCenter.transform.position, Vector3.up, Color.magenta, 5);
         if (hit.collider != null)
-        { FourCastList.Add(hit.collider.gameObject); }
-        Physics.Raycast(gameObject.transform.position, Vector3.down, out hit, 1);
-        Debug.DrawRay(gameObject.transform.position, Vector3.down, Color.magenta, 5);
+            if(!MatchingAliens.Contains(hit.collider.gameObject))
+        { FourCastList.Add(hit.collider.gameObject);}
+
+        Physics.Raycast(FourCastCenter.transform.position, Vector3.down, out hit, 1);
+        Debug.DrawRay(FourCastCenter.transform.position, Vector3.down, Color.magenta, 5);
         if (hit.collider != null)
-        { FourCastList.Add(hit.collider.gameObject); }
-        Physics.Raycast(gameObject.transform.position, Vector3.left, out hit, 1);
-        Debug.DrawRay(gameObject.transform.position, Vector3.left, Color.magenta, 5);
+            if (!MatchingAliens.Contains(hit.collider.gameObject))
+            { FourCastList.Add(hit.collider.gameObject); }
+
+        Physics.Raycast(FourCastCenter.transform.position, Vector3.left, out hit, 1);
+        Debug.DrawRay(FourCastCenter.transform.position, Vector3.left, Color.magenta, 5);
         if (hit.collider != null)
-        { FourCastList.Add(hit.collider.gameObject); }
-        Physics.Raycast(gameObject.transform.position, Vector3.right, out hit, 1);
-        Debug.DrawRay(gameObject.transform.position, Vector3.right, Color.magenta, 5);
+            if (!MatchingAliens.Contains(hit.collider.gameObject))
+            { FourCastList.Add(hit.collider.gameObject); }
+
+        Physics.Raycast(FourCastCenter.transform.position, Vector3.right, out hit, 1);
+        Debug.DrawRay(FourCastCenter.transform.position, Vector3.right, Color.magenta, 5);
         if (hit.collider != null)
-        { FourCastList.Add(hit.collider.gameObject); }
+            if (!MatchingAliens.Contains(hit.collider.gameObject))
+            { FourCastList.Add(hit.collider.gameObject); }
+
         return FourCastList;
     }
 
     private void AddList(List<GameObject> FourCastList)
     {
-        List<GameObject> MatchingAliens = new List<GameObject>();
-        MatchingAliens.Add(gameObject);
+
         foreach (GameObject alien in FourCastList)
         {
             if (alien.GetComponent<Renderer>().material.color == gameObject.GetComponent<Renderer>().material.color)
             {
                 MatchingAliens.Add(alien);
-                FourCast(alien);
+                AddList(FourCast(alien));
             }
         }
-        if(MatchingAliens.Count >= 3)
+    
+    }
+
+    private void DestroyAliens()
+    {
+        if (MatchingAliens.Count >= 3)
         {
             Debug.Log(MatchingAliens.Count);
+            scoreManager.Scoring(MatchingAliens.Count);
             foreach (GameObject alien in MatchingAliens)
             {
                 Destroy(alien);
+                alien.GetComponent<AlienBehaviour>().destroyed = true;
             }
         }
     }
@@ -107,9 +141,28 @@ public class AlienBehaviour : MonoBehaviour
         Physics.Raycast(gameObject.transform.position, Vector3.left, out hitLeft, 1);
         if(hitLeft.collider == null)
         { leftFree = true; }
+        else
+        { leftFree = false; }
         RaycastHit hitRight;
         Physics.Raycast(gameObject.transform.position, Vector3.right, out hitRight, 1);
         if (hitRight.collider == null)
         { rightFree = true; }
+        else
+        { rightFree = false; }
+    }
+
+    public void MoveLeft()
+    {
+        if (leftFree)
+        {
+            transform.position += Vector3.left;
+        }
+    }
+    public void MoveRight()
+    {
+        if (rightFree)
+        {
+            transform.position += Vector3.right;
+        }
     }
 }
