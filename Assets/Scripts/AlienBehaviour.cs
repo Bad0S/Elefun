@@ -9,6 +9,9 @@ public class AlienBehaviour : MonoBehaviour
     private Renderer alienRend;
     private Rigidbody alienRb;
     public bool counted;
+    public bool stacked;
+    public bool leftFree;
+    public bool rightFree;
 
     private void Start()
     {
@@ -23,11 +26,21 @@ public class AlienBehaviour : MonoBehaviour
             case 2: alienRend.material.color = Color.blue; break;
         }
     }
+
+    private void Update()
+    {
+        DetectFree();
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            AddList(FourCast(gameObject));
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Stack")
         {
-            AddList(FourCast(gameObject));
+            stacked = true;
         }
         if (collision.collider.tag == "Player")
         {
@@ -86,5 +99,17 @@ public class AlienBehaviour : MonoBehaviour
                 Destroy(alien);
             }
         }
+    }
+
+    private void DetectFree()
+    {
+        RaycastHit hitLeft;
+        Physics.Raycast(gameObject.transform.position, Vector3.left, out hitLeft, 1);
+        if(hitLeft.collider == null)
+        { leftFree = true; }
+        RaycastHit hitRight;
+        Physics.Raycast(gameObject.transform.position, Vector3.right, out hitRight, 1);
+        if (hitRight.collider == null)
+        { rightFree = true; }
     }
 }
