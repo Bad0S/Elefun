@@ -17,6 +17,7 @@ public class AlienBehaviour : MonoBehaviour
     public Material blueMat;
     public bool destroyed;
     private ScoreManager scoreManager;
+    public float scaleDecalage;
 
     private void Start()
     {
@@ -30,6 +31,17 @@ public class AlienBehaviour : MonoBehaviour
             case 0: alienRend.material = redMat; break;
             case 1: alienRend.material = greenMat; break;
             case 2: alienRend.material = blueMat; break;
+        }
+        int b = Random.Range(0, 7);
+        switch(b)
+        {
+            case 0: transform.position = new Vector3(-4.8f, transform.position.y, 0); break;
+            case 1: transform.position = new Vector3(-3.2f, transform.position.y, 0); break;
+            case 2: transform.position = new Vector3(-1.6f, transform.position.y, 0); break;
+            case 3: transform.position = new Vector3(0, transform.position.y, 0); break;
+            case 4: transform.position = new Vector3(1.6f, transform.position.y, 0); break;
+            case 5: transform.position = new Vector3(3.2f, transform.position.y, 0); break;
+            case 6: transform.position = new Vector3(4.8f, transform.position.y, 0); break;
         }
     }
 
@@ -155,14 +167,14 @@ public class AlienBehaviour : MonoBehaviour
     {
         if (leftFree)
         {
-            transform.position += Vector3.left;
+            transform.position += Vector3.left * scaleDecalage;
         }
     }
     public void MoveRight()
     {
         if (rightFree)
         {
-            transform.position += Vector3.right;
+            transform.position += Vector3.right * scaleDecalage;
         }
     }
 }

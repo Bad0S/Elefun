@@ -7,20 +7,14 @@ public class SpawnManager : MonoBehaviour
     public float timer;
     public float timeBetweenSpawn;
     public GameObject alien;
-    private float posX;
-	void Start ()
-    {
-		
-	}
+    public float hauteurSpawn;
 	
 	void Update ()
     {
         timer += Time.deltaTime;
         if (timer >= timeBetweenSpawn)
         {
-            posX = Random.Range(-5f, 5.9f);
-            posX = Mathf.FloorToInt(posX);
-            Instantiate(alien, new Vector3(posX,21 , 0), Quaternion.identity );
+            Instantiate(alien, new Vector3(0, hauteurSpawn, 0), Quaternion.identity);
             timer = 0;
         }
 	}
