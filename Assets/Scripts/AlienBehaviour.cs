@@ -18,9 +18,13 @@ public class AlienBehaviour : MonoBehaviour
     public bool destroyed;
     private ScoreManager scoreManager;
     public float scaleDecalage;
+    private float mousePressPosX;
+    private float mouseReleasPosX;
+    private Camera cam;
 
     private void Start()
     {
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         scoreManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<ScoreManager>();
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         alienRend = gameObject.GetComponent<Renderer>();
@@ -49,21 +53,30 @@ public class AlienBehaviour : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mousePressPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
+        }
+
         DetectFree();
-        if (Input.GetKeyDown(KeyCode.Return) && !destroyed)
+        if (Input.GetMouseButtonUp(0) && Input.mousePosition.y < Screen.height / 2)
         {
-            MatchingAliens = new List<GameObject>();
-            MatchingAliens.Add(gameObject);
-            AddList(FourCast(gameObject));
-            DestroyAliens();
-        }
-        if (Input.GetKeyDown(KeyCode.Q) && stacked )
-        {
-            MoveLeft();
-        }
-        if (Input.GetKeyDown(KeyCode.D) && stacked)
-        {
-            MoveRight();
+            mouseReleasPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
+            if (!destroyed && mouseReleasPosX - mousePressPosX > -0.5f && mouseReleasPosX - mousePressPosX < 0.5f)
+            {
+                MatchingAliens = new List<GameObject>();
+                MatchingAliens.Add(gameObject);
+                AddList(FourCast(gameObject));
+                DestroyAliens();
+            }
+            if(mouseReleasPosX - mousePressPosX < -0.5f && stacked)
+            {
+                MoveLeft();
+            }
+            if (mouseReleasPosX - mousePressPosX > 0.5f && stacked)
+            {
+                MoveRight();
+            }
         }
     }
 
