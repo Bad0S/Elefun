@@ -11,7 +11,8 @@ public class SpawnManager : MonoBehaviour
 	
 	void Update ()
     {
-        timer += Time.deltaTime;
+        if (UIManager.pause == false)
+        { timer += Time.deltaTime; }
         if (timer >= timeBetweenSpawn)
         {
             Instantiate(alien, new Vector3(0, hauteurSpawn, 0), Quaternion.identity);

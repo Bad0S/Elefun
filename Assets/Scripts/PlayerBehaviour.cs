@@ -17,20 +17,26 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x && Input.mousePosition.y >= (Screen.height / 2 - 100) && Input.GetMouseButton(0))
         {
-            if (transform.position.x > -5.1f)
+            if (transform.position.x > -5.1f && UIManager.pause == false)
             {
                 transform.position += Vector3.left * moveSpeed;
             }
         }
         if (cam.ScreenToWorldPoint(Input.mousePosition).x > transform.position.x && Input.mousePosition.y >= (Screen.height/2 - 100) && Input.GetMouseButton(0))
         {
-            if (transform.position.x < 5.1f)
+            if (transform.position.x < 5.1f && UIManager.pause == false)
             {
                 transform.position += Vector3.right * moveSpeed;
             }
         }
-
-        if (dead)
-        { moveSpeed = 0; }
+        
+        if (UIManager.pause == true)
+        {
+            moveSpeed = 0;
+        }
+        else
+        {
+            moveSpeed = 0.1f;
+        }
 	}
 }

@@ -7,7 +7,6 @@ public class AlienBehaviour : MonoBehaviour
 {
     public Transform playerTrans;
     private Renderer alienRend;
-    private Rigidbody alienRb;
     public bool counted;
     public bool stacked;
     public bool leftFree;
@@ -28,7 +27,6 @@ public class AlienBehaviour : MonoBehaviour
         scoreManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<ScoreManager>();
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         alienRend = gameObject.GetComponent<Renderer>();
-        alienRb = gameObject.GetComponent<Rigidbody>();
         int a = Random.Range(0, 3);
         switch(a)
         {
