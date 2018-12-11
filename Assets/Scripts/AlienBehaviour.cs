@@ -60,13 +60,10 @@ public class AlienBehaviour : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && Input.mousePosition.y < Screen.height / 2)
         {
             mouseReleasPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
-            if (!destroyed && mouseReleasPosX - mousePressPosX > -0.5f && mouseReleasPosX - mousePressPosX < 0.5f)
-            {
-                MatchingAliens = new List<GameObject>();
-                MatchingAliens.Add(gameObject);
-                AddList(FourCast(gameObject));
-                DestroyAliens();
-            }
+            //if (!destroyed && mouseReleasPosX - mousePressPosX > -0.5f && mouseReleasPosX - mousePressPosX < 0.5f)
+            //{
+                
+            //}
             if(mouseReleasPosX - mousePressPosX < -0.5f && stacked)
             {
                 MoveLeft();
@@ -76,6 +73,14 @@ public class AlienBehaviour : MonoBehaviour
                 MoveRight();
             }
         }
+    }
+
+    private void OnMouseDown()
+    {
+        MatchingAliens = new List<GameObject>();
+        MatchingAliens.Add(gameObject);
+        AddList(FourCast(gameObject));
+        DestroyAliens();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -94,7 +99,7 @@ public class AlienBehaviour : MonoBehaviour
     {
         playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
         yield return new WaitForSecondsRealtime(1.5f);
-        playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
+        UIManager.pause = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
