@@ -687,7 +687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d45fb1e59d30b46935eb54e1d3e4ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.1
+  moveSpeed: 0.2
   dead: 0
   cam: {fileID: 534669904}
 --- !u!135 &733934399

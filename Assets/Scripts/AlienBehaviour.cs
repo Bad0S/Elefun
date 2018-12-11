@@ -57,13 +57,9 @@ public class AlienBehaviour : MonoBehaviour
         }
 
         DetectFree();
-        if (Input.GetMouseButtonUp(0) && Input.mousePosition.y < Screen.height / 2)
+        if (Input.GetMouseButtonUp(0) && Input.mousePosition.y < Screen.height * 0.25f)
         {
             mouseReleasPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
-            //if (!destroyed && mouseReleasPosX - mousePressPosX > -0.5f && mouseReleasPosX - mousePressPosX < 0.5f)
-            //{
-                
-            //}
             if(mouseReleasPosX - mousePressPosX < -0.5f && stacked)
             {
                 MoveLeft();
@@ -98,7 +94,7 @@ public class AlienBehaviour : MonoBehaviour
     IEnumerator Death()
     {
         playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSecondsRealtime(1f);
         UIManager.pause = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

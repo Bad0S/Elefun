@@ -15,14 +15,14 @@ public class PlayerBehaviour : MonoBehaviour
 	
 	void Update ()
     {
-        if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x && Input.mousePosition.y >= (Screen.height / 2 - 100) && Input.GetMouseButton(0))
+        if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x && Input.mousePosition.y >= (Screen.height *0.25f) && Input.GetMouseButton(0))
         {
             if (transform.position.x > -5.1f && UIManager.pause == false)
             {
                 transform.position += Vector3.left * moveSpeed;
             }
         }
-        if (cam.ScreenToWorldPoint(Input.mousePosition).x > transform.position.x && Input.mousePosition.y >= (Screen.height/2 - 100) && Input.GetMouseButton(0))
+        if (cam.ScreenToWorldPoint(Input.mousePosition).x > transform.position.x && Input.mousePosition.y >= (Screen.height * 0.25f) && Input.GetMouseButton(0))
         {
             if (transform.position.x < 5.1f && UIManager.pause == false)
             {
@@ -36,7 +36,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
         else
         {
-            moveSpeed = 0.1f;
+            moveSpeed = 0.15f;
         }
 	}
 }
