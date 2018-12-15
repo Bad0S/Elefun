@@ -179,7 +179,14 @@ public class AlienBehaviour : MonoBehaviour
     {
         if (leftFree)
         {
-            transform.position += Vector3.left * scaleDecalage;
+            RaycastHit hitLeftMove;
+            Physics.Raycast(gameObject.transform.position, Vector3.left, out hitLeftMove);
+            Debug.DrawRay(gameObject.transform.position, Vector3.left);
+            Debug.Log(hitLeftMove.distance);
+            float tempMoveAlien = hitLeftMove.distance % 1.6f;
+            Vector3 moveTowardV3 = new Vector3(transform.position.x - tempMoveAlien, transform.position.y, transform.position.z);
+            Vector3.Lerp(transform.position, moveTowardV3,0.5f);
+            //transform.position += Vector3.left * scaleDecalage;
         }
     }
     public void MoveRight()
