@@ -20,6 +20,7 @@ public class AlienBehaviour : MonoBehaviour
     private float mousePressPosX;
     private float mouseReleasPosX;
     private Camera cam;
+    private Rigidbody alienBody;
 
     private void Start()
     {
@@ -27,6 +28,7 @@ public class AlienBehaviour : MonoBehaviour
         scoreManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<ScoreManager>();
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         alienRend = gameObject.GetComponent<Renderer>();
+        alienBody = gameObject.GetComponent<Rigidbody>();
         int a = Random.Range(0, 3);
         switch(a)
         {
@@ -179,21 +181,34 @@ public class AlienBehaviour : MonoBehaviour
     {
         if (leftFree)
         {
-            RaycastHit hitLeftMove;
-            Physics.Raycast(gameObject.transform.position, Vector3.left, out hitLeftMove);
-            Debug.DrawRay(gameObject.transform.position, Vector3.left);
-            Debug.Log(hitLeftMove.distance);
-            float tempMoveAlien = hitLeftMove.distance % 1.6f;
-            Vector3 moveTowardV3 = new Vector3(transform.position.x - tempMoveAlien, transform.position.y, transform.position.z);
-            Vector3.Lerp(transform.position, moveTowardV3,0.5f);
-            //transform.position += Vector3.left * scaleDecalage;
+            StartCoroutine(moveLeftLoop());
         }
     }
     public void MoveRight()
     {
         if (rightFree)
         {
-            transform.position += Vector3.right * scaleDecalage;
+            StartCoroutine(moveRightLoop());
+        }
+    }
+
+    IEnumerator moveLeftLoop()
+    {
+        transform.position += Vector3.left * scaleDecalage;
+        yield return new WaitForSecondsRealtime(0.01f);
+        if (leftFree)
+        {
+            StartCoroutine(moveLeftLoop());
+        }
+    }
+
+    IEnumerator moveRightLoop()
+    {
+        transform.position += Vector3.right * scaleDecalage;
+        yield return new WaitForSecondsRealtime(0.01f);
+        if (rightFree)
+        {
+            StartCoroutine(moveRightLoop());
         }
     }
 }
