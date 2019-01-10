@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 833f4a16e53d98e48864299e4e9df111, type: 3}
-  m_Name: Triade
+  m_Name: Visage
   m_EditorClassIdentifier: 
   cubes:
   - posX: 4.8
