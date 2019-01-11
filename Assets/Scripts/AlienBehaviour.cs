@@ -56,6 +56,8 @@ public class AlienBehaviour : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mousePressPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
+            if (Input.mousePosition.y < Screen.height * 0.25f)
+            { playerTrans.GetComponent<PlayerBehaviour>().canMove = false; }
         }
 
         DetectFree();
@@ -79,6 +81,11 @@ public class AlienBehaviour : MonoBehaviour
         MatchingAliens.Add(gameObject);
         AddList(FourCast(gameObject));
         DestroyAliens();
+    }
+
+    private void OnMouseUp()
+    {
+        playerTrans.GetComponent<PlayerBehaviour>().canMove = true;
     }
 
     private void OnCollisionEnter(Collision collision)

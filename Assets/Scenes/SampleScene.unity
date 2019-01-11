@@ -718,6 +718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0.2
   dead: 0
+  canMove: 1
   cam: {fileID: 534669904}
 --- !u!136 &733934399
 CapsuleCollider:
