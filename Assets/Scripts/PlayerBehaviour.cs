@@ -39,5 +39,6 @@ public class PlayerBehaviour : MonoBehaviour
         {
             moveSpeed = 0.15f;
         }
+        
 	}
 }
