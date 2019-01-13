@@ -17,11 +17,12 @@ public class AlienBehaviour : MonoBehaviour
     public bool destroyed;
     private ScoreManager scoreManager;
     public float scaleDecalage;
-    private float mousePressPosX;
-    private float mouseReleasPosX;
+    private Vector2 mousePressPos;
+    private Vector2 mouseReleasPos;
     private Camera cam;
     private Rigidbody alienBody;
     private PlayerBehaviour playerScript;
+    private float limitHeight;
 
     private void Start()
     {
@@ -49,6 +50,8 @@ public class AlienBehaviour : MonoBehaviour
             case 5: transform.position = new Vector3(3.2f, transform.position.y, 0); break;
             case 6: transform.position = new Vector3(4.8f, transform.position.y, 0); break;
         }
+
+        Debug.Log(Screen.height * 0.4f);
     }
 
     List<GameObject> MatchingAliens;
@@ -57,33 +60,36 @@ public class AlienBehaviour : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            mousePressPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
+            mousePressPos = cam.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(mousePressPos);
             //if (Input.mousePosition.y < Screen.height * 0.4f)
         }
 
         DetectFree();
         if (Input.GetMouseButtonUp(0))
         {
-            mouseReleasPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
-            if(mouseReleasPosX - mousePressPosX < -0.5f && stacked)
+            mouseReleasPos = cam.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(mouseReleasPos);
+            if (mousePressPos.y < 6.9 && mouseReleasPos.y < 6.9)
             {
-                MoveLeft();
+                if (mouseReleasPos.x - mousePressPos.x < -0.5f && stacked)
+                {
+                    MoveLeft();
+                }
+                if (mouseReleasPos.x - mousePressPos.x > 0.5f && stacked)
+                {
+                    MoveRight();
+                }
             }
-            if (mouseReleasPosX - mousePressPosX > 0.5f && stacked)
-            {
-                MoveRight();
-            }
-            
         }
     }
 
     private void OnMouseDown()
     {
-        playerScript.ShootAnim();
-        MatchingAliens = new List<GameObject>();
-        MatchingAliens.Add(gameObject);
-        AddList(FourCast(gameObject));
-        DestroyAliens();
+            MatchingAliens = new List<GameObject>();
+            MatchingAliens.Add(gameObject);
+            AddList(FourCast(gameObject));
+            DestroyAliens();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -157,6 +163,7 @@ public class AlienBehaviour : MonoBehaviour
     {
         if (MatchingAliens.Count >= 3)
         {
+            playerScript.ShootAnim();
             Debug.Log(MatchingAliens.Count);
             scoreManager.Scoring(MatchingAliens.Count);
             foreach (GameObject alien in MatchingAliens)
