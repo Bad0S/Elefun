@@ -21,12 +21,14 @@ public class AlienBehaviour : MonoBehaviour
     private float mouseReleasPosX;
     private Camera cam;
     private Rigidbody alienBody;
+    private PlayerBehaviour playerScript;
 
     private void Start()
     {
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         scoreManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<ScoreManager>();
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
         alienRend = gameObject.GetComponent<Renderer>();
         alienBody = gameObject.GetComponent<Rigidbody>();
         int a = Random.Range(0, 3);
@@ -56,12 +58,11 @@ public class AlienBehaviour : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mousePressPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
-            if (Input.mousePosition.y < Screen.height * 0.4f)
-            { playerTrans.GetComponent<PlayerBehaviour>().canMove = false; }
+            //if (Input.mousePosition.y < Screen.height * 0.4f)
         }
 
         DetectFree();
-        if (Input.GetMouseButtonUp(0) && playerTrans.GetComponent<PlayerBehaviour>().canMove == false)
+        if (Input.GetMouseButtonUp(0))
         {
             mouseReleasPosX = cam.ScreenToWorldPoint(Input.mousePosition).x;
             if(mouseReleasPosX - mousePressPosX < -0.5f && stacked)
@@ -72,13 +73,13 @@ public class AlienBehaviour : MonoBehaviour
             {
                 MoveRight();
             }
-
-            playerTrans.GetComponent<PlayerBehaviour>().canMove = true;
+            
         }
     }
 
     private void OnMouseDown()
     {
+        playerScript.ShootAnim();
         MatchingAliens = new List<GameObject>();
         MatchingAliens.Add(gameObject);
         AddList(FourCast(gameObject));
@@ -99,6 +100,7 @@ public class AlienBehaviour : MonoBehaviour
 
     IEnumerator Death()
     {
+        playerScript.DeathAnim();
         playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
         yield return new WaitForSecondsRealtime(1f);
         UIManager.pause = true;
@@ -199,6 +201,7 @@ public class AlienBehaviour : MonoBehaviour
     IEnumerator moveLeftLoop()
     {
         transform.position += Vector3.left * scaleDecalage;
+        Debug.Log("Move Left");
         yield return new WaitForSecondsRealtime(0.01f);
         if (leftFree)
         {
@@ -209,6 +212,7 @@ public class AlienBehaviour : MonoBehaviour
     IEnumerator moveRightLoop()
     {
         transform.position += Vector3.right * scaleDecalage;
+        Debug.Log("Move Right");
         yield return new WaitForSecondsRealtime(0.01f);
         if (rightFree)
         {
