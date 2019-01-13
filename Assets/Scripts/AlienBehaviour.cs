@@ -50,8 +50,6 @@ public class AlienBehaviour : MonoBehaviour
             case 5: transform.position = new Vector3(3.2f, transform.position.y, 0); break;
             case 6: transform.position = new Vector3(4.8f, transform.position.y, 0); break;
         }
-
-        Debug.Log(Screen.height * 0.4f);
     }
 
     List<GameObject> MatchingAliens;
@@ -61,15 +59,12 @@ public class AlienBehaviour : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mousePressPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(mousePressPos);
-            //if (Input.mousePosition.y < Screen.height * 0.4f)
         }
 
         DetectFree();
         if (Input.GetMouseButtonUp(0))
         {
             mouseReleasPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(mouseReleasPos);
             if (mousePressPos.y < 6.9 && mouseReleasPos.y < 6.9)
             {
                 if (mouseReleasPos.x - mousePressPos.x < -0.5f && stacked)
@@ -108,7 +103,7 @@ public class AlienBehaviour : MonoBehaviour
     {
         playerScript.DeathAnim();
         playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(2f);
         UIManager.pause = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -164,7 +159,6 @@ public class AlienBehaviour : MonoBehaviour
         if (MatchingAliens.Count >= 3)
         {
             playerScript.ShootAnim();
-            Debug.Log(MatchingAliens.Count);
             scoreManager.Scoring(MatchingAliens.Count);
             foreach (GameObject alien in MatchingAliens)
             {
