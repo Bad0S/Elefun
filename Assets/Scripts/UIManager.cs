@@ -43,24 +43,79 @@ public class UIManager : MonoBehaviour
             pause = false;
         }
 
-        restartButton.gameObject.SetActive(true);
-        pauseButton.gameObject.SetActive(false);
-        titleText.gameObject.SetActive(false);
-        TitleUI.SetActive(true);
+
+        //Fade(InGameUI, 0, false);
+        //Fade(TitleUI, 1, true);
+        Fade(InGameUI, true);
+        Fade(TitleUI, false);
         startButton.GetComponentInChildren<Text>().text = "UNPAUSE";
+        titleText.gameObject.SetActive(false);
     }
 
     void StartGame()
     {
         pause = false;
         Time.timeScale = 1.0f;
-        TitleUI.SetActive(false);
-        InGameUI.SetActive(true);
-        pauseButton.gameObject.SetActive(true);
+        Fade(TitleUI, true);
+        Fade(InGameUI, false);
+        //Fade(TitleUI,0, false);
+        //Fade(InGameUI, 1, true);
     }
 
     private void Quit()
     {
         Application.Quit();
+    }
+
+    private void Fade(GameObject uIToFade,bool inOrOut)
+    {
+        Animator[] AnimatorsArray = uIToFade.GetComponentsInChildren<Animator>();
+        foreach (Animator animatorToFade in AnimatorsArray)
+        {
+            if (inOrOut == false)
+            {
+                animatorToFade.SetTrigger("FadeIn");
+                StartCoroutine(FadeCoroutine(false, uIToFade));
+            }
+            else
+            {
+                animatorToFade.SetTrigger("FadeOut");
+                StartCoroutine(FadeCoroutine(true, uIToFade));
+            }
+        }
+    }
+
+    /*private void Fade(GameObject UIAFade,int alphaTarget, bool enable)
+    {
+        StartCoroutine(DisableUI(0.5f, UIAFade, enable)); 
+        Image[] imagesAFadeArray = UIAFade.GetComponentsInChildren<Image>();
+        foreach (Image imageAFade in imagesAFadeArray)
+        {
+                imageAFade.CrossFadeAlpha(alphaTarget, 0.5f, true);
+        }
+
+        Text[] textesAFadeArray = UIAFade.GetComponentsInChildren<Text>();
+        foreach (Text texteAFade in textesAFadeArray)
+        {
+                texteAFade.CrossFadeAlpha(alphaTarget, 0.5f, true);
+        }
+    }
+
+    IEnumerator DisableUI(float timeBeforeDisable,GameObject objectToDisable, bool enable)
+    {
+        if(enable == true)
+        { objectToDisable.SetActive(enable); }
+        yield return new WaitForSeconds(timeBeforeDisable);
+        if (enable == false)
+        { objectToDisable.SetActive(enable); }
+    }*/
+
+    IEnumerator FadeCoroutine(bool inOrOut,GameObject objectToDisable)
+    {
+        if(!inOrOut)
+        { objectToDisable.SetActive(true); }
+        yield return new WaitForSeconds(0.5f);
+        if(inOrOut)
+        { objectToDisable.SetActive(false); }
     }
 }
