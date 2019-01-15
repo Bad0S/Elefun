@@ -53,6 +53,7 @@ public class AlienBehaviour : MonoBehaviour
     }
 
     List<GameObject> MatchingAliens;
+    List<GameObject> MovingAliens;
 
     private void Update()
     {
@@ -87,14 +88,6 @@ public class AlienBehaviour : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
-    {
-            MatchingAliens = new List<GameObject>();
-            MatchingAliens.Add(gameObject);
-            AddList(FourCast(gameObject));
-            DestroyAliens();
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Stack")
@@ -107,6 +100,7 @@ public class AlienBehaviour : MonoBehaviour
         }
     }
 
+
     IEnumerator Death()
     {
         playerScript.DeathAnim();
@@ -114,6 +108,15 @@ public class AlienBehaviour : MonoBehaviour
         yield return new WaitForSecondsRealtime(2f);
         UIManager.pause = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    #region 
+    private void OnMouseDown()
+    {
+        MatchingAliens = new List<GameObject>();
+        MatchingAliens.Add(gameObject);
+        AddList(FourCast(gameObject));
+        DestroyAliens();
     }
 
     private List<GameObject> FourCast(GameObject FourCastCenter)
@@ -175,7 +178,7 @@ public class AlienBehaviour : MonoBehaviour
             }
         }
     }
-
+    #endregion
     private void DetectFree()
     {
         RaycastHit hitLeft;
@@ -191,7 +194,7 @@ public class AlienBehaviour : MonoBehaviour
         else
         { rightFree = false; }
     }
-
+    #region
     public void MoveLeft()
     {
         if (leftFree)
@@ -207,10 +210,63 @@ public class AlienBehaviour : MonoBehaviour
         }
     }
 
+    private GameObject MoveCast(GameObject moveCastCenter, int leftOrRightCast)
+    {
+        if (leftOrRightCast == 0)
+        {
+            RaycastHit hitRight;
+            Physics.Raycast(moveCastCenter.transform.position, Vector3.right, out hitRight, 1);
+            Debug.DrawRay(moveCastCenter.transform.position, Vector3.right, Color.magenta, 5);
+            if (hitRight.collider != null && hitRight.collider.tag == "Stack")
+            {
+                return hitRight.collider.gameObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            RaycastHit hitLeft;
+            Physics.Raycast(moveCastCenter.transform.position, Vector3.left, out hitLeft, 1);
+            Debug.DrawRay(moveCastCenter.transform.position, Vector3.left, Color.magenta, 5);
+            if (hitLeft.collider != null && hitLeft.collider.tag == "Stack")
+            {
+                return hitLeft.collider.gameObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
+    private void AddListMove(GameObject movingAlien, int leftOrRight)
+    {
+        if (movingAlien != null)
+        {
+            MovingAliens.Add(movingAlien);
+            if (leftOrRight == 0)
+            {
+                AddListMove(MoveCast(movingAlien, 0), 0);
+            }
+            else
+            {
+                AddListMove(MoveCast(movingAlien, 1), 1);
+            }
+        }
+    }
+
     IEnumerator moveLeftLoop()
     {
-        transform.position += Vector3.left * scaleDecalage;
-        Debug.Log("Move Left");
+            MovingAliens = new List<GameObject>();
+            MovingAliens.Add(gameObject);
+            AddListMove(MoveCast(gameObject, 0), 0);
+            foreach (GameObject alienToMoveLeft in MovingAliens)
+            {
+                alienToMoveLeft.transform.position += Vector3.left * scaleDecalage;
+            }
         yield return new WaitForSecondsRealtime(0.01f);
         if (leftFree)
         {
@@ -220,12 +276,19 @@ public class AlienBehaviour : MonoBehaviour
 
     IEnumerator moveRightLoop()
     {
-        transform.position += Vector3.right * scaleDecalage;
-        Debug.Log("Move Right");
+            MovingAliens = new List<GameObject>();
+            MovingAliens.Add(gameObject);
+            AddListMove(MoveCast(gameObject, 1), 1);
+
+            foreach (GameObject alienToMoveLeft in MovingAliens)
+            {
+                alienToMoveLeft.transform.position += Vector3.right * scaleDecalage;
+            }
         yield return new WaitForSecondsRealtime(0.01f);
         if (rightFree)
         {
             StartCoroutine(moveRightLoop());
         }
     }
+    #endregion
 }
