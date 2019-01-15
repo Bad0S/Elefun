@@ -77,6 +77,14 @@ public class AlienBehaviour : MonoBehaviour
                 }
             }
         }
+        if (UIManager.pause == true)
+        {
+            alienBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
+        }
+        else
+        {
+            alienBody.constraints = RigidbodyConstraints.FreezeRotation;
+        }
     }
 
     private void OnMouseDown()

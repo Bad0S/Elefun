@@ -6,6 +6,7 @@ public class PlayerBehaviour : MonoBehaviour
 {
     [Range(0.1f,5)]
     public float moveSpeed;
+    public float moveSpeedInit;
     public bool dead;
     public Camera cam;
     private Animator playerAnim;
@@ -13,6 +14,7 @@ public class PlayerBehaviour : MonoBehaviour
 	void Start ()
     {
         playerAnim = GetComponentInChildren<Animator>();
+        moveSpeedInit = moveSpeed;
 	}
 	
 	void Update ()
@@ -35,10 +37,12 @@ public class PlayerBehaviour : MonoBehaviour
         if (UIManager.pause == true)
         {
             moveSpeed = 0;
+            playerAnim.speed = 0;
         }
         else
         {
-            moveSpeed = 0.15f;
+            moveSpeed = moveSpeedInit;
+            playerAnim.speed = 1;
         }
 	}
 

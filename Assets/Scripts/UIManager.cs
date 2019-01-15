@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
     void Pause()
     {
         //Time.timeScale = Mathf.Approximately(Time.timeScale, 1.0f) ? 0.0f : 1.0f;
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
 
         if (pause == false)
         {
