@@ -2343,7 +2343,7 @@ GameObject:
   - component: {fileID: 1445490156}
   - component: {fileID: 1445490158}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Credits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2689,7 +2689,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: bdf987f7858a92442ba65c3760405a25, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2697,7 +2697,7 @@ SpriteRenderer:
   m_Size: {x: 2.92, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1527175556
@@ -2839,7 +2839,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: bdf987f7858a92442ba65c3760405a25, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2847,7 +2847,7 @@ SpriteRenderer:
   m_Size: {x: 2.92, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1766117138
@@ -3211,6 +3211,9 @@ MonoBehaviour:
   scrollSpeed: 0.05
   enviro1: {fileID: 1489632762}
   enviro2: {fileID: 1561564548}
+  enviroGreen: {fileID: 21300000, guid: c44f14b2772eea54da82b6d10f25f443, type: 3}
+  enviroRed: {fileID: 21300000, guid: d83e9b2ceae8f504fbdae3df60d4ea3f, type: 3}
+  enviroBlue: {fileID: 21300000, guid: bdf987f7858a92442ba65c3760405a25, type: 3}
 --- !u!1 &2046521937
 GameObject:
   m_ObjectHideFlags: 0
