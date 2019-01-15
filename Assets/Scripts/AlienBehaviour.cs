@@ -115,10 +115,19 @@ public class AlienBehaviour : MonoBehaviour
     #region 
     private void OnMouseDown()
     {
-        MatchingAliens = new List<GameObject>();
-        MatchingAliens.Add(gameObject);
-        AddList(FourCast(gameObject));
-        DestroyAliens();
+        mousePressPos = cam.ScreenToWorldPoint(Input.mousePosition);
+    }
+
+    private void OnMouseUp()
+    {
+        mouseReleasPos = cam.ScreenToWorldPoint(Input.mousePosition);
+        if (mouseReleasPos.x - mousePressPos.x > -0.5f && mouseReleasPos.x - mousePressPos.x < 0.5f)
+        {
+            MatchingAliens = new List<GameObject>();
+            MatchingAliens.Add(gameObject);
+            AddList(FourCast(gameObject));
+            DestroyAliens();
+        }
     }
 
     private List<GameObject> FourCast(GameObject FourCastCenter)

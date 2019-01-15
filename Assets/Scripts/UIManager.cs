@@ -26,10 +26,6 @@ public class UIManager : MonoBehaviour
         quitButton.onClick.AddListener(Quit);
     }
 
-    private void Update()
-    {
-    }
-
     void Pause()
     {
         //Time.timeScale = Mathf.Approximately(Time.timeScale, 1.0f) ? 0.0f : 1.0f;

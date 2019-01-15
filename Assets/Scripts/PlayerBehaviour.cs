@@ -19,18 +19,21 @@ public class PlayerBehaviour : MonoBehaviour
 	
 	void Update ()
     {
-        if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x && Input.mousePosition.y >= (Screen.height *0.4f) && Input.GetMouseButton(0))
+        if (Input.mousePosition.y <= (Screen.height * 0.89f))
         {
-            if (transform.position.x > -5.1f && UIManager.pause == false)
+            if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x && Input.mousePosition.y >= (Screen.height * 0.4f) && Input.GetMouseButton(0))
             {
-                transform.position += Vector3.left * moveSpeed;
+                if (transform.position.x > -5.1f && UIManager.pause == false)
+                {
+                    transform.position += Vector3.left * moveSpeed;
+                }
             }
-        }
-        if (cam.ScreenToWorldPoint(Input.mousePosition).x > transform.position.x && Input.mousePosition.y >= (Screen.height * 0.4f) && Input.GetMouseButton(0))
-        {
-            if (transform.position.x < 5.1f && UIManager.pause == false)
+            if (cam.ScreenToWorldPoint(Input.mousePosition).x > transform.position.x && Input.mousePosition.y >= (Screen.height * 0.4f) && Input.GetMouseButton(0))
             {
-                transform.position += Vector3.right * moveSpeed;
+                if (transform.position.x < 5.1f && UIManager.pause == false)
+                {
+                    transform.position += Vector3.right * moveSpeed;
+                }
             }
         }
         
