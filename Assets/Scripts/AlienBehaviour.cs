@@ -107,7 +107,7 @@ public class AlienBehaviour : MonoBehaviour
     {
         playerScript.DeathAnim();
         playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(3f);
         UIManager.pause = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
