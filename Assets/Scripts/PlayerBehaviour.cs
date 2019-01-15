@@ -34,7 +34,7 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
         
-        if (UIManager.pause == true)
+        if (UIManager.pause && !UIManager.title)
         {
             moveSpeed = 0;
             playerAnim.speed = 0;

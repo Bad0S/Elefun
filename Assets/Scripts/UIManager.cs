@@ -6,13 +6,14 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static bool pause = true;
+    public static bool title = true;
 
     public Button pauseButton;
     public Button startButton;
     public Button quitButton;
     public Button restartButton;
 
-    public Text titleText;
+    public Image titleImage;
 
     public GameObject TitleUI;
     public GameObject InGameUI;
@@ -36,6 +37,7 @@ public class UIManager : MonoBehaviour
 
         if (pause == false)
         {
+
             pause = true;
         }
         else
@@ -49,11 +51,12 @@ public class UIManager : MonoBehaviour
         Fade(InGameUI, true);
         Fade(TitleUI, false);
         startButton.GetComponentInChildren<Text>().text = "UNPAUSE";
-        titleText.gameObject.SetActive(false);
+        titleImage.gameObject.SetActive(false);
     }
 
     void StartGame()
     {
+        title = false;
         pause = false;
         Time.timeScale = 1.0f;
         Fade(TitleUI, true);

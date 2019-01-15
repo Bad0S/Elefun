@@ -5,15 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class AlienBehaviour : MonoBehaviour
 {
+    public int RGB;
+    public Sprite redSprite;
+    public Sprite greenSprite;
+    public Sprite blueSprite;
+    private SpriteRenderer childRend;
+
     public Transform playerTrans;
-    private Renderer alienRend;
     public bool counted;
     public bool stacked;
     public bool leftFree;
     public bool rightFree;
-    public Material redMat;
-    public Material greenMat;
-    public Material blueMat;
     public bool destroyed;
     private ScoreManager scoreManager;
     public float scaleDecalage;
@@ -26,18 +28,18 @@ public class AlienBehaviour : MonoBehaviour
 
     private void Start()
     {
+        childRend = GetComponentInChildren<SpriteRenderer>();
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         scoreManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<ScoreManager>();
         playerTrans = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
-        alienRend = gameObject.GetComponent<Renderer>();
         alienBody = gameObject.GetComponent<Rigidbody>();
         int a = Random.Range(0, 3);
         switch(a)
         {
-            case 0: alienRend.material = redMat; break;
-            case 1: alienRend.material = greenMat; break;
-            case 2: alienRend.material = blueMat; break;
+            case 0: childRend.sprite = redSprite;RGB = 0; break;
+            case 1: childRend.sprite = greenSprite; RGB = 1; break;
+            case 2: childRend.sprite = blueSprite; RGB = 2; break;
         }
         int b = Random.Range(0, 7);
         switch(b)
@@ -156,10 +158,13 @@ public class AlienBehaviour : MonoBehaviour
 
         foreach (GameObject alien in FourCastList)
         {
-            if (alien.GetComponent<Renderer>().material.color == gameObject.GetComponent<Renderer>().material.color)
+            if (alien.GetComponent<AlienBehaviour>() != null)
             {
-                MatchingAliens.Add(alien);
-                AddList(FourCast(alien));
+                if (alien.GetComponent<AlienBehaviour>().RGB == RGB)
+                {
+                    MatchingAliens.Add(alien);
+                    AddList(FourCast(alien));
+                }
             }
         }
     
