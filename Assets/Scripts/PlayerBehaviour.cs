@@ -19,7 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
 	
 	void Update ()
     {
-        if (Input.mousePosition.y <= (Screen.height * 0.89f))
+        if (Input.mousePosition.y <= (Screen.height * 0.89f) && !dead)
         {
             if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x && Input.mousePosition.y >= (Screen.height * 0.4f) && Input.GetMouseButton(0))
             {
@@ -56,6 +56,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void DeathAnim()
     {
-        playerAnim.SetTrigger("Death");
+        if (!dead)
+        {
+            playerAnim.SetTrigger("Death");
+        }
     }
 }

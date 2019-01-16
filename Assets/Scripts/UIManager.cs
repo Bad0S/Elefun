@@ -33,7 +33,13 @@ public class UIManager : MonoBehaviour
     public Sprite sndOff;
     public bool sound;
 
+    public Button howToPlayButton;
+
     public GameObject readyGo;
+
+    public AudioManager soundScript;
+
+    public GameObject how2PlayObject;
 
     void Start()
     {
@@ -45,10 +51,14 @@ public class UIManager : MonoBehaviour
         soundButton.onClick.AddListener(ToggleSound);
         backButton.onClick.AddListener(Back);
         optionsButton.onClick.AddListener(OptionsMenu);
+        howToPlayButton.onClick.AddListener(How2Play);
+
+        soundScript = GetComponent<AudioManager>();
 
         if (hasDied)
         {
             TitleUI.SetActive(false);
+            Fade(InGameUI, true);
             StartGame();
         }
     }
@@ -60,6 +70,7 @@ public class UIManager : MonoBehaviour
         if (pause == false)
         {
             pause = true;
+            soundScript.ChangeClipF(false);
         }
         else
         {
@@ -77,18 +88,30 @@ public class UIManager : MonoBehaviour
 
     void StartGame()
     {
-        Fade(TitleUI, true);
-        Fade(InGameUI, false);
-        StartCoroutine(StartGameCoroutine());
+        if (title)
+        {
+            Fade(TitleUI, true);
+            Fade(OptionsUI, true);
+            StartCoroutine(StartGameCoroutine());
+        }
+        else
+        {
+            Fade(TitleUI, true);
+            Fade(OptionsUI, true);
+            StartCoroutine(StartGameCoroutine());
+        }
         //Fade(TitleUI,0, false);
         //Fade(InGameUI, 1, true);
     }
 
     IEnumerator StartGameCoroutine()
     {
+        soundScript.ChangeClipF(true);
         readyGo.SetActive(true);
         yield return new WaitForSeconds(1.667f);
         readyGo.SetActive(false);
+        if (title)
+        { Fade(InGameUI, false); }
         title = false;
         pause = false;
     }
@@ -108,14 +131,14 @@ public class UIManager : MonoBehaviour
     {
         if (dG == false )
         {
-            pauseButton.transform.position = new Vector3(-282, 680, 0);
-            pauseButton.GetComponent<Image>().sprite = gaucher;
+            pauseButton.transform.position = new Vector3(160, 1760, 0);
+            dGButton.GetComponent<Image>().sprite = gaucher;
             dG = true;
         }
         else
         {
-            pauseButton.transform.position = new Vector3(282,680,0);
-            pauseButton.GetComponent<Image>().sprite = droitier;
+            pauseButton.transform.position = new Vector3(920, 1760, 0);
+            dGButton.GetComponent<Image>().sprite = droitier;
             dG = false;
         }
     }
@@ -124,11 +147,13 @@ public class UIManager : MonoBehaviour
     {
         if (sound == false)
         {
+            GetComponent<AudioSource>().volume = 1;
             soundButton.GetComponent<Image>().sprite = sndOff;
             sound = true;
         }
         else
         {
+            GetComponent<AudioSource>().volume = 0;
             soundButton.GetComponent<Image>().sprite = sndOn;
             sound = false;
         }
@@ -156,6 +181,14 @@ public class UIManager : MonoBehaviour
     {
         Fade(TitleUI, false);
         Fade(OptionsUI, true );
+    }
+
+    private void How2Play()
+    {
+        how2PlayObject.SetActive(true);
+        InGameUI.GetComponent<Transform>().localScale = Vector3.zero;
+        TitleUI.GetComponent<Transform>().localScale = Vector3.zero;
+        OptionsUI.GetComponent<Transform>().localScale = Vector3.zero;
     }
 
     /*private void Fade(GameObject UIAFade,int alphaTarget, bool enable)

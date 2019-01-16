@@ -26,7 +26,7 @@ public class AlienBehaviour : MonoBehaviour
     private PlayerBehaviour playerScript;
     private float limitHeight;
 
-    public GameObject readyGo;
+    public LaserBehaviour laserScript;
 
     private void Start()
     {
@@ -55,7 +55,7 @@ public class AlienBehaviour : MonoBehaviour
             case 6: transform.position = new Vector3(4.8f, transform.position.y, 0); break;
         }
 
-        readyGo = GameObject.FindGameObjectWithTag("RGo");
+        laserScript = GameObject.FindGameObjectWithTag("RGo").GetComponent<LaserBehaviour>();
     }
 
     List<GameObject> MatchingAliens;
@@ -110,7 +110,7 @@ public class AlienBehaviour : MonoBehaviour
     IEnumerator Death()
     {
         playerScript.DeathAnim();
-        playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
+        playerScript.dead = true;
         yield return new WaitForSecondsRealtime(2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         UIManager.hasDied = true;
@@ -187,6 +187,7 @@ public class AlienBehaviour : MonoBehaviour
     {
         if (MatchingAliens.Count >= 3)
         {
+            laserScript.ShootTowards(cam.ScreenToWorldPoint(Input.mousePosition));
             playerScript.ShootAnim();
             scoreManager.Scoring(MatchingAliens.Count);
             foreach (GameObject alien in MatchingAliens)
