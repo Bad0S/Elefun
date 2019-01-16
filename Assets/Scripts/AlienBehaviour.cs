@@ -26,6 +26,8 @@ public class AlienBehaviour : MonoBehaviour
     private PlayerBehaviour playerScript;
     private float limitHeight;
 
+    public GameObject readyGo;
+
     private void Start()
     {
         childRend = GetComponentInChildren<SpriteRenderer>();
@@ -52,6 +54,8 @@ public class AlienBehaviour : MonoBehaviour
             case 5: transform.position = new Vector3(3.2f, transform.position.y, 0); break;
             case 6: transform.position = new Vector3(4.8f, transform.position.y, 0); break;
         }
+
+        readyGo = GameObject.FindGameObjectWithTag("RGo");
     }
 
     List<GameObject> MatchingAliens;
@@ -107,9 +111,9 @@ public class AlienBehaviour : MonoBehaviour
     {
         playerScript.DeathAnim();
         playerTrans.gameObject.GetComponent<PlayerBehaviour>().dead = true;
-        yield return new WaitForSecondsRealtime(3f);
-        UIManager.pause = true;
+        yield return new WaitForSecondsRealtime(2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        UIManager.hasDied = true;
     }
 
     #region 

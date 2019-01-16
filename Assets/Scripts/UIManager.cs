@@ -7,8 +7,12 @@ public class UIManager : MonoBehaviour
 {
     public static bool pause = true;
     public static bool title = true;
+    public static bool hasDied = false;
 
     public Button pauseButton;
+    public Sprite droitier;
+    public Sprite gaucher;
+
     public Button startButton;
     public Button quitButton;
     public Button restartButton;
@@ -19,8 +23,15 @@ public class UIManager : MonoBehaviour
     public GameObject InGameUI;
     public GameObject OptionsUI;
 
+    public Button optionsButton;
+    public Button backButton;
+
     public Button dGButton;
+    public bool dG;
     public Button soundButton;
+    public Sprite sndOn;
+    public Sprite sndOff;
+    public bool sound;
 
     public GameObject readyGo;
 
@@ -30,6 +41,16 @@ public class UIManager : MonoBehaviour
         pauseButton.onClick.AddListener(Pause);
         startButton.onClick.AddListener(StartGame);
         quitButton.onClick.AddListener(Quit);
+        dGButton.onClick.AddListener(LeftOrRight);
+        soundButton.onClick.AddListener(ToggleSound);
+        backButton.onClick.AddListener(Back);
+        optionsButton.onClick.AddListener(OptionsMenu);
+
+        if (hasDied)
+        {
+            TitleUI.SetActive(false);
+            StartGame();
+        }
     }
 
     void Pause()
@@ -38,12 +59,12 @@ public class UIManager : MonoBehaviour
 
         if (pause == false)
         {
-
             pause = true;
         }
         else
         {
-            pause = false;
+            Fade(InGameUI, false);
+            StartCoroutine(StartGameCoroutine());
         }
 
 
@@ -51,7 +72,6 @@ public class UIManager : MonoBehaviour
         //Fade(TitleUI, 1, true);
         //Fade(InGameUI, true);
         Fade(TitleUI, false);
-        startButton.GetComponentInChildren<Text>().text = "UNPAUSE";
         titleImage.gameObject.SetActive(false);
     }
 
@@ -78,6 +98,42 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
+    private void OptionsMenu()
+    {
+        Fade(OptionsUI, false );
+        Fade(TitleUI, true);
+    }
+
+    private void LeftOrRight()
+    {
+        if (dG == false )
+        {
+            pauseButton.transform.position = new Vector3(-282, 680, 0);
+            pauseButton.GetComponent<Image>().sprite = gaucher;
+            dG = true;
+        }
+        else
+        {
+            pauseButton.transform.position = new Vector3(282,680,0);
+            pauseButton.GetComponent<Image>().sprite = droitier;
+            dG = false;
+        }
+    }
+
+    private void ToggleSound()
+    {
+        if (sound == false)
+        {
+            soundButton.GetComponent<Image>().sprite = sndOff;
+            sound = true;
+        }
+        else
+        {
+            soundButton.GetComponent<Image>().sprite = sndOn;
+            sound = false;
+        }
+    }
+
     private void Fade(GameObject uIToFade,bool inOrOut)
     {
         Animator[] AnimatorsArray = uIToFade.GetComponentsInChildren<Animator>();
@@ -94,6 +150,12 @@ public class UIManager : MonoBehaviour
                 StartCoroutine(FadeCoroutine(true, uIToFade));
             }
         }
+    }
+
+    private void Back()
+    {
+        Fade(TitleUI, false);
+        Fade(OptionsUI, true );
     }
 
     /*private void Fade(GameObject UIAFade,int alphaTarget, bool enable)

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeSpawner : MonoBehaviour {
+public class CubeSpawner : MonoBehaviour
+{
 
     public List<ListObject> paterns;
     public GameObject cubePrefab;
@@ -10,7 +11,8 @@ public class CubeSpawner : MonoBehaviour {
 
 	void Start ()
     {
-        Spawn();
+        if (!UIManager.pause)
+        { Spawn(); }
 	}
 
     void Spawn()
