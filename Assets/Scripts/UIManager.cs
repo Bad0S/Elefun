@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     public GameObject TitleUI;
     public GameObject InGameUI;
 
+    public GameObject readyGo;
+
     void Start()
     {
         restartButton.gameObject.SetActive(false);
@@ -29,7 +31,6 @@ public class UIManager : MonoBehaviour
     void Pause()
     {
         //Time.timeScale = Mathf.Approximately(Time.timeScale, 1.0f) ? 0.0f : 1.0f;
-        //Time.timeScale = 0.0f;
 
         if (pause == false)
         {
@@ -52,13 +53,20 @@ public class UIManager : MonoBehaviour
 
     void StartGame()
     {
-        title = false;
-        pause = false;
-        Time.timeScale = 1.0f;
         Fade(TitleUI, true);
         Fade(InGameUI, false);
+        StartCoroutine(StartGameCoroutine());
         //Fade(TitleUI,0, false);
         //Fade(InGameUI, 1, true);
+    }
+
+    IEnumerator StartGameCoroutine()
+    {
+        readyGo.SetActive(true);
+        yield return new WaitForSeconds(1.667f);
+        readyGo.SetActive(false);
+        title = false;
+        pause = false;
     }
 
     private void Quit()
