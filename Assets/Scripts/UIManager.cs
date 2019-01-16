@@ -17,6 +17,10 @@ public class UIManager : MonoBehaviour
 
     public GameObject TitleUI;
     public GameObject InGameUI;
+    public GameObject OptionsUI;
+
+    public Button dGButton;
+    public Button soundButton;
 
     public GameObject readyGo;
 
@@ -45,7 +49,7 @@ public class UIManager : MonoBehaviour
 
         //Fade(InGameUI, 0, false);
         //Fade(TitleUI, 1, true);
-        Fade(InGameUI, true);
+        //Fade(InGameUI, true);
         Fade(TitleUI, false);
         startButton.GetComponentInChildren<Text>().text = "UNPAUSE";
         titleImage.gameObject.SetActive(false);
