@@ -58,7 +58,7 @@ public class UIManager : MonoBehaviour
         if (hasDied)
         {
             TitleUI.SetActive(false);
-            Fade(InGameUI, true);
+            Fade(InGameUI, false);
             StartGame();
         }
     }

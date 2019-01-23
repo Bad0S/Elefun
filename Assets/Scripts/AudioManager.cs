@@ -13,6 +13,16 @@ public class AudioManager : MonoBehaviour
     {
         source = GetComponent<AudioSource>();
         soundAnim = GetComponent<Animator>();
+        if (!UIManager.hasDied)
+        {
+            source.clip = menuClip;
+            source.Play();
+        }
+        else
+        {
+            source.clip = gameClip;
+            source.Play();
+        }
 	}
 
     public void ChangeClipF(bool quelleSource)
